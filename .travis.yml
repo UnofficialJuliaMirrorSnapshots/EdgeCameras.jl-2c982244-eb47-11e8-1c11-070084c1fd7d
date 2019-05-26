@@ -1,0 +1,40 @@
+## Documentation: http://docs.travis-ci.com/user/languages/julia/
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+  - 1.1
+  - nightly
+env:
+  - DATADEPS_ALWAYS_ACCEPT=true
+cache:
+  directories:
+    - $HOME/.julia/datadeps
+addons:
+  apt:
+    packages:
+    - imagemagick
+    - tcl8.5
+    - tk8.5
+    - libcairo2
+    - libavcodec-extra-54
+    - libavdevice53
+    - libavfilter3
+    - libavformat54
+    - libavutil-extra-52
+    - libswscale2
+    - libgtk-3-dev
+    - zlib1g-dev
+notifications:
+  email: false
+matrix:
+ allow_failures:
+ - julia: nightly
+branches:
+  only:
+    - master
+
+after_success:
+  # push coverage results to Codecov
+- julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
